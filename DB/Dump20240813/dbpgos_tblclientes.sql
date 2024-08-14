@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: dbinfox
+-- Host: 127.0.0.1    Database: dbpgos
 -- ------------------------------------------------------
 -- Server version	8.0.36
 
@@ -16,31 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tbusuarios`
+-- Table structure for table `tblclientes`
 --
 
-DROP TABLE IF EXISTS `tbusuarios`;
+DROP TABLE IF EXISTS `tblclientes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tbusuarios` (
-  `idUser` int NOT NULL,
-  `usuario` varchar(50) NOT NULL,
-  `fone` varchar(15) DEFAULT NULL,
-  `login` varchar(15) NOT NULL,
-  `senha` varchar(15) NOT NULL,
-  PRIMARY KEY (`idUser`),
-  UNIQUE KEY `login` (`login`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `tblclientes` (
+  `idCliente` int NOT NULL AUTO_INCREMENT,
+  `nomeCliente` varchar(50) NOT NULL,
+  `enderecoCliente` varchar(100) DEFAULT NULL,
+  `foneCliente` varchar(50) NOT NULL,
+  `emailCliente` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`idCliente`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tbusuarios`
+-- Dumping data for table `tblclientes`
 --
 
-LOCK TABLES `tbusuarios` WRITE;
-/*!40000 ALTER TABLE `tbusuarios` DISABLE KEYS */;
-INSERT INTO `tbusuarios` VALUES (1,'Hellysamar','61 98284-4250','helly','12345'),(2,'Ana Paula','61 88888-9999','ana','12345'),(3,'Administrador','61 99999-9999','admin','admin'),(4,'Luan','88 97777-8899','luangin','123456'),(5,'Terezinha','61 96666-2586','tera','123456');
-/*!40000 ALTER TABLE `tbusuarios` ENABLE KEYS */;
+LOCK TABLES `tblclientes` WRITE;
+/*!40000 ALTER TABLE `tblclientes` DISABLE KEYS */;
+INSERT INTO `tblclientes` VALUES (1,'Fulanin','Residencial','61 98858-9586','ful@mail.com'),(2,'Nuance Lee','Comercial','61 99999-9586','lee@mail.com'),(3,'Deutrano','Comercial','71 99999-9586','del@mail.com');
+/*!40000 ALTER TABLE `tblclientes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-13 11:42:29
+-- Dump completed on 2024-08-13 16:30:18

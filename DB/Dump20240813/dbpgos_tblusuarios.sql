@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: dbinfox
+-- Host: 127.0.0.1    Database: dbpgos
 -- ------------------------------------------------------
 -- Server version	8.0.36
 
@@ -16,35 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tbos`
+-- Table structure for table `tblusuarios`
 --
 
-DROP TABLE IF EXISTS `tbos`;
+DROP TABLE IF EXISTS `tblusuarios`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tbos` (
-  `os` int NOT NULL AUTO_INCREMENT,
-  `dataOS` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `equipamento` varchar(150) NOT NULL,
-  `defeito` varchar(150) NOT NULL,
-  `servico` varchar(150) DEFAULT NULL,
-  `tecnico` varchar(30) DEFAULT NULL,
-  `valor` decimal(10,2) DEFAULT NULL,
-  `idCliente` int NOT NULL,
-  PRIMARY KEY (`os`),
-  KEY `idCliente` (`idCliente`),
-  CONSTRAINT `tbos_ibfk_1` FOREIGN KEY (`idCliente`) REFERENCES `tbclientes` (`idCliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `tblusuarios` (
+  `idUser` int NOT NULL,
+  `usuario` varchar(50) NOT NULL,
+  `fone` varchar(15) DEFAULT NULL,
+  `login` varchar(15) NOT NULL,
+  `senha` varchar(15) NOT NULL,
+  PRIMARY KEY (`idUser`),
+  UNIQUE KEY `login` (`login`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tbos`
+-- Dumping data for table `tblusuarios`
 --
 
-LOCK TABLES `tbos` WRITE;
-/*!40000 ALTER TABLE `tbos` DISABLE KEYS */;
-INSERT INTO `tbos` VALUES (2,'2024-03-05 17:19:04','notebook dell','apagou, não liga','troca de cabo','helly',150.25,1),(3,'2024-08-12 20:58:50','macbook pro','não liga o brilho no inicio de seção','atualização de Kext','helly',50.25,1),(6,'2024-08-12 21:02:43','macbook air','trackpad não funciona Trackpad','substituição de trackpad','no lugar de helly',280.00,2);
-/*!40000 ALTER TABLE `tbos` ENABLE KEYS */;
+LOCK TABLES `tblusuarios` WRITE;
+/*!40000 ALTER TABLE `tblusuarios` DISABLE KEYS */;
+INSERT INTO `tblusuarios` VALUES (1,'Hellysamar','61 98284-4250','helly','12345'),(2,'Ana Paula','61 88888-9999','ana','12345'),(3,'Administrador','61 99999-9999','admin','admin'),(4,'Luan','88 97777-8899','luangin','123456'),(5,'Terezinha','61 96666-2586','tera','123456'),(6,'Ferdin','55 95577-8899','fe','123456'),(7,'Francine','61 98888-3456','fran','123456');
+/*!40000 ALTER TABLE `tblusuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -56,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-13 11:42:29
+-- Dump completed on 2024-08-13 16:30:18

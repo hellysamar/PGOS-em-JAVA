@@ -1,9 +1,17 @@
+-- RENAME TABLE dbinfox.tbclientes TO dbpgos.tblclientes,
+--              dbinfox.tbos TO dbpgos.tblos,
+--              dbinfox.tbusuarios TO dbpgos.tblusuarios,
+
+-- Apagando banco
+DROP DATABASE dbinfox;
+
 -- comentários
 -- Criando banco de dados
-CREATE DATABASE dbinfox;
+CREATE DATABASE dbpgos;
 
 -- Escolhe e seleciona o banco de dados a ser utilizado
 USE dbinfox;
+USE dbpgos;
 
 -- Criar uma tabela no banco selecionado "Bloco de Instruções"
 CREATE TABLE tbusuarios (
@@ -13,35 +21,35 @@ CREATE TABLE tbusuarios (
     login VARCHAR(15) NOT NULL UNIQUE,
     senha VARCHAR(15) NOT NULL
 );
-INSERT INTO tbusuarios (idUser, usuario,fone,login,senha) VALUES (4, 'Luan', '88 97777-8899', 'FuLuan', '123456');
+INSERT INTO tblusuarios (idUser, usuario,fone,login,senha) VALUES (6, 'Ferdin', '55 95577-8899', 'fe', '123456');
 
 -- Alterar nome do Campo na tabela
-ALTER TABLE tbusuarios
+ALTER TABLE tblusuarios
 CHANGE iduser idUser INT;
 
 -- Descreve a tabela
-DESCRIBE tbusuarios;
+DESCRIBE tblusuarios;
 
 -- Inserir dados na tabela (CRUD) 
 -- CREATE -> Insert
-INSERT INTO tbusuarios (iduser, usuario, fone, login, senha)
+INSERT INTO tblusuarios (iduser, usuario, fone, login, senha)
 VALUES (1, 'Hellysamar', '61 98284-4250', 'helly', '12345');
 
 -- Exibe os dados da tabela (CRUD) 
 -- READ -> Select
-SELECT * FROM tbusuarios;
+SELECT * FROM tblusuarios;
 
 -- Alterar dados de uma tabela (CRUD) 
 -- UPDATE -> Update
-UPDATE tbusuarios SET fone = '61 88888-9999' WHERE iduser = 2;
+UPDATE tblusuarios SET fone = '61 88888-9999' WHERE iduser = 2;
 
 -- Apaga um registro da tabela (CRUD) 
 -- DELETE - Delete
-DELETE FROM tbusuarios WHERE iduser = 4;
+DELETE FROM tblusuarios WHERE iduser = 4;
 
 
 -- Criando tabela clientes
-CREATE TABLE tbclientes (
+CREATE TABLE tblclientes (
 	idCliente INT PRIMARY KEY AUTO_INCREMENT,
     nomeCliente VARCHAR(50) NOT NULL,
     enderecoCliente VARCHAR(100),
@@ -49,20 +57,20 @@ CREATE TABLE tbclientes (
     emailCliente VARCHAR(50)
 );
 
-DESCRIBE tbclientes;
+DESCRIBE tblclientes;
 
-INSERT INTO tbclientes (
+INSERT INTO tblclientes (
 	nomeCliente, enderecoCliente, foneCliente, emailCliente
 ) VALUES (
-	'Fulanin', 'Residencial', '61 98858-9586', 'ful@mail.com'
+	'Deutrano', 'Comercial', '71 99999-9586', 'del@mail.com'
 );
 
-SELECT * FROM tbclientes;
+SELECT * FROM tblclientes;
 
 
 -- Criando tabela OS Ordem de Serviço
 -- Relacionamento de tabelas
-CREATE TABLE tbos (
+CREATE TABLE tblos (
 	os INT PRIMARY KEY AUTO_INCREMENT,
     dataOS TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     equipamento VARCHAR(150) NOT NULL,
@@ -71,38 +79,39 @@ CREATE TABLE tbos (
     tecnico VARCHAR(30),
     valor DECIMAL(10,2),
     idCliente INT NOT NULL,
-	FOREIGN KEY(idCliente) REFERENCES tbclientes(idCliente)
+	FOREIGN KEY(idCliente) REFERENCES tblclientes(idCliente)
 );
 
-DESCRIBE tbos;
+DESCRIBE tblos;
 
-SELECT * FROM tbos;
+SELECT * FROM tblos;
 
-INSERT INTO tbos (
+INSERT INTO tblos (
 	equipamento, defeito, servico, tecnico, valor, idCliente
 ) VALUES (
-	'notebook dell', 'apagou, não liga', 'troca de cabo', 'helly', 150.25, 1
+	'Pixelbook', 'minutenção', 'substituição de pelicula', 'tecnico', 75.00, 3
 );
+SELECT * FROM tblos;
 
 -- Traz informações de duas ou mais tabelas
 SELECT
 O.os, equipamento, defeito, servico, valor,
 C.nomeCliente, foneCliente
-FROM tbos AS O
-INNER JOIN tbclientes AS C
+FROM tblos AS O
+INNER JOIN tblclientes AS C
 ON (O.idCliente = C.idCliente);
 
 
 -- CRUD
 -- CREATE
-INSERT INTO tbusuarios (idUser, usuario, fone, login, senha) VALUES (7, 'Francine', '61 98888-3456', 'fran', '123456');
-SELECT * FROM tbusuarios;
+INSERT INTO tblusuarios (idUser, usuario, fone, login, senha) VALUES (7, 'Francine', '61 98888-3456', 'fran', '123456');
+SELECT * FROM tblusuarios;
 -- READ
-SELECT * FROM tbusuarios WHERE idUser = 4;
-SELECT * FROM tbusuarios;
+SELECT * FROM tblusuarios WHERE idUser = 4;
+SELECT * FROM tblusuarios;
 -- UPDATE
-UPDATE tbusuarios SET login = 'luangin' WHERE idUser = 4;
-SELECT * FROM tbusuarios;
+UPDATE tblusuarios SET login = 'luangin' WHERE idUser = 4;
+SELECT * FROM tblusuarios;
 -- DELETE
-DELETE FROM tbusuarios WHERE idUser = 7;
-SELECT * FROM tbusuarios;
+DELETE FROM tblusuarios WHERE idUser = 7;
+SELECT * FROM tblusuarios;
