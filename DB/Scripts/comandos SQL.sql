@@ -104,7 +104,7 @@ ON (O.idCliente = C.idCliente);
 
 -- CRUD
 -- CREATE
-INSERT INTO tblusuarios (idUser, usuario, fone, login, senha) VALUES (7, 'Francine', '61 98888-3456', 'fran', '123456');
+INSERT INTO tblusuarios (idUser, usuario, fone, login, senha) VALUES (8, 'Juan An', '61 98888-3456', 'juan', 'juan');
 SELECT * FROM tblusuarios;
 -- READ
 SELECT * FROM tblusuarios WHERE idUser = 4;
