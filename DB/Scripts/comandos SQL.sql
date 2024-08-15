@@ -101,6 +101,14 @@ FROM tblos AS O
 INNER JOIN tblclientes AS C
 ON (O.idCliente = C.idCliente);
 
+-- INCLUI UM CAMPO NA TABELA
+ALTER TABLE tblusuarios ADD COLUMN perfil VARCHAR(20) NOT NULL;
+
+-- DELETA UM CAMPO DA TABELA
+ALTER TABLE tblusuarios DROP COLUMN perfil;
+
+UPDATE tblusuarios SET perfil = 'user' WHERE idUser = 8;
+SELECT * FROM tblusuarios;
 
 -- CRUD
 -- CREATE
@@ -110,7 +118,7 @@ SELECT * FROM tblusuarios;
 SELECT * FROM tblusuarios WHERE idUser = 4;
 SELECT * FROM tblusuarios;
 -- UPDATE
-UPDATE tblusuarios SET login = 'luangin' WHERE idUser = 4;
+UPDATE tblusuarios SET usuario = 'Hellysamar Araújo' WHERE idUser = 1;
 SELECT * FROM tblusuarios;
 -- DELETE
 DELETE FROM tblusuarios WHERE idUser = 7;

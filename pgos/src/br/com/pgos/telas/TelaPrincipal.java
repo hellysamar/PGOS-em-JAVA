@@ -35,6 +35,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Desktop = new javax.swing.JDesktopPane();
         lblUseuarioPrincipal = new javax.swing.JLabel();
         lblDataLocal = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         Menu = new javax.swing.JMenuBar();
         menuCad = new javax.swing.JMenu();
         menuCadCliente = new javax.swing.JMenuItem();
@@ -60,11 +61,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Desktop.setLayout(DesktopLayout);
         DesktopLayout.setHorizontalGroup(
             DesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 801, Short.MAX_VALUE)
+            .addGap(0, 769, Short.MAX_VALUE)
         );
         DesktopLayout.setVerticalGroup(
             DesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 502, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         lblUseuarioPrincipal.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -72,6 +73,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         lblDataLocal.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lblDataLocal.setText("DATA");
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/pgos/icons/PGOS.png"))); // NOI18N
+        jLabel1.setMaximumSize(new java.awt.Dimension(200, 200));
+        jLabel1.setMinimumSize(new java.awt.Dimension(200, 200));
 
         menuCad.setText("Cadastro");
 
@@ -131,23 +136,26 @@ public class TelaPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(Desktop)
-                .addGap(50, 50, 50)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(Desktop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblUseuarioPrincipal)
-                    .addComponent(lblDataLocal))
-                .addGap(167, 167, 167))
+                    .addComponent(lblDataLocal)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(Desktop)
             .addGroup(layout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addGap(45, 45, 45)
                 .addComponent(lblUseuarioPrincipal)
                 .addGap(35, 35, 35)
                 .addComponent(lblDataLocal)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         setSize(new java.awt.Dimension(1148, 562));
@@ -215,8 +223,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane Desktop;
     private javax.swing.JMenuBar Menu;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblDataLocal;
-    private javax.swing.JLabel lblUseuarioPrincipal;
+    public static javax.swing.JLabel lblUseuarioPrincipal;
     private javax.swing.JMenu menuAjuda;
     private javax.swing.JMenuItem menuAjudaSobre;
     private javax.swing.JMenu menuCad;

@@ -7,6 +7,7 @@ package br.com.pgos.telas;
 
 import java.sql.*;
 import br.com.pgos.dal.ModuloConexao;
+import java.awt.Color;
 import javax.swing.JOptionPane;
 /**
  *
@@ -34,12 +35,26 @@ public class TelaLogin extends javax.swing.JFrame {
             // É feita a execução da Query (Consulta)
             rs = pst.executeQuery();
             
+            
             if (rs.next()) {
-                // instanceia a tela principal para chamala
+                // instancia a tela principal para chama-la
                 TelaPrincipal principal = new TelaPrincipal();
                 // permite acessao a tela principal chamando-a
-                principal.setVisible(true);
                 // acessa a tela principal e fecha a tela de Login
+                principal.setVisible(true);
+                // captura do dado do campo nr 6, que é o campo Perfil
+                String perfil = rs.getString(6);            
+                
+                // Valida se o dado do perfil é Admin, sendo assim ele acessa o
+                // bloco if e libera o acesso aos items de menu "cadastro de usuário" e "relatorio"
+                if (perfil.equals("admin")){
+                    TelaPrincipal.menuCadUsuario.setEnabled(true);
+                    TelaPrincipal.menuRel.setEnabled(true);
+                    TelaPrincipal.lblUseuarioPrincipal.setForeground(Color.red);
+                }
+                
+                TelaPrincipal.lblUseuarioPrincipal.setText(rs.getString(2));
+                
                 this.dispose();
                 conexao.close();
                 
