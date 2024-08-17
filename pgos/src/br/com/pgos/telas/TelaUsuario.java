@@ -108,20 +108,52 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             pst.setString(4, txtSenhaUser.getText());
             pst.setString(5, cmbPerfilUser.getSelectedItem().toString());
             
-            int atualizado = pst.executeUpdate();
-            
-            if (atualizado > 0) {
-                JOptionPane.showMessageDialog(null, "Dados do usuário " + txtNomeUser.getText() + " alterados com sucesso!");
+            /*SE Campos Obrigatórios VAZÍOS*/
+            if ((txtIdUser.getText().isEmpty()) || (txtNomeUser.getText().isEmpty()) || (txtLoginUser.getText().isEmpty()) || (txtSenhaUser.getText().isEmpty()) || (cmbPerfilUser.getSelectedItem().toString().isEmpty())) {
+                // Apresenta mensagem de obrigatoriedade
+                JOptionPane.showMessageDialog(null, "Preencha os Campos Obrigatórios!");
             } else {
-                JOptionPane.showMessageDialog(null, "Houve algum problema" + atualizado);
-            }
-            
+                // SENÃO Atualiza o Banco
+                int atualizado = pst.executeUpdate();
+
+                if (atualizado > 0) {
+                   JOptionPane.showMessageDialog(null, "Dados do usuário " + txtNomeUser.getText() + " alterados com sucesso!");
+                } else {
+                   JOptionPane.showMessageDialog(null, "Houve algum problema" + atualizado);
+                }   
+            }            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }        
     }
     
     //Método DELETE do CRU ->D
+    private void remover() {
+        String sql = "DELETE FROM tblUsuarios WHERE idUser = ?;";
+        int confirma = JOptionPane.showConfirmDialog(null, "Confirma remoção do usuário " + txtNomeUser.getText() + "?", "Atenção!", JOptionPane.YES_NO_OPTION);
+        
+        if(confirma == JOptionPane.YES_OPTION){
+            try {
+                pst = conexao.prepareStatement(sql);
+                
+                pst.setString(1, txtIdUser.getText());
+                
+                int remocao = pst.executeUpdate();
+                
+                if (remocao > 0) {
+                    txtNomeUser.setText(null);
+                    txtFoneUser.setText(null);
+                    txtLoginUser.setText(null);
+                    txtSenhaUser.setText(null);
+                    cmbPerfilUser.setSelectedItem(null);
+                    
+                    JOptionPane.showMessageDialog(null, "Usuário " + txtNomeUser.getText() + " removido com Sucesso!");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }
    
     /**
      * This method is called from within the constructor to initialize the form.
@@ -210,6 +242,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnDelete.setToolTipText("Deletar");
         btnDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnDelete.setPreferredSize(new java.awt.Dimension(90, 90));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         txtIdUser.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtIdUser.addActionListener(new java.awt.event.ActionListener() {
@@ -341,6 +378,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         alterar();
     }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        remover();
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

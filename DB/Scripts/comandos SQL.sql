@@ -123,3 +123,19 @@ SELECT * FROM tblusuarios;
 -- DELETE
 DELETE FROM tblusuarios WHERE idUser = 7;
 SELECT * FROM tblusuarios;
+
+
+
+select * from tblusuarios;
+
+UPDATE tblusuarios SET 
+usuario='Erick Jackan',
+fone='666656544585',
+login='erick',
+senha='erick',
+perfil='user'
+WHERE idUser = 11;
+
+DELETE FROM tblUsuarios WHERE idUser = 9;
+
+select * from tblusuarios;
