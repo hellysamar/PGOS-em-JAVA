@@ -28,35 +28,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         conexao = ModuloConexao.conector();
     }
 
-    private void consultar() {
-        String sql = "SELECT * FROM tblUsuarios WHERE idUser = ?;";
-        
-        try {
-            pst = conexao.prepareStatement(sql);
-            pst.setString(1, txtIdUser.getText());
-            rs = pst.executeQuery();
-            
-            if (rs.next()) {
-                txtNomeUser.setText(rs.getString(2));
-                txtFoneUser.setText(rs.getString(3));
-                txtLoginUser.setText(rs.getString(4));
-                txtSenhaUser.setText(rs.getString(5));
-                
-                cmbPerfilUser.setSelectedItem(rs.getString(6));
-            } else {
-                JOptionPane.showMessageDialog(null, "Usuário não cadastrado!");
-                
-                txtNomeUser.setText(null);
-                txtFoneUser.setText(null);
-                txtLoginUser.setText(null);
-                txtSenhaUser.setText(null);
-                cmbPerfilUser.setSelectedItem(null);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
-        }
-    }
-    
+    //Método CREATE do C<- RUD
     private void adicionar() {
         String sql = "INSERT INTO tblUsuarios (idUser, usuario, fone, login, senha, perfil) VALUES (?, ?, ?, ?, ?, ?);";
         
@@ -91,6 +63,66 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         }
         
     }
+    
+    //Método READ do C ->R<- UD
+    private void consultar() {
+        String sql = "SELECT * FROM tblUsuarios WHERE idUser = ?;";
+        
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtIdUser.getText());
+            rs = pst.executeQuery();
+            
+            if (rs.next()) {
+                txtNomeUser.setText(rs.getString(2));
+                txtFoneUser.setText(rs.getString(3));
+                txtLoginUser.setText(rs.getString(4));
+                txtSenhaUser.setText(rs.getString(5));
+                
+                cmbPerfilUser.setSelectedItem(rs.getString(6));
+            } else {
+                JOptionPane.showMessageDialog(null, "Usuário não cadastrado!");
+                
+                txtNomeUser.setText(null);
+                txtFoneUser.setText(null);
+                txtLoginUser.setText(null);
+                txtSenhaUser.setText(null);
+                cmbPerfilUser.setSelectedItem(null);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+    
+    //Método UPDATE do CR ->U<- D
+    private void alterar() {
+        String sql = "UPDATE tblUsuarios SET usuario = ?, fone = ?, login = ?, senha = ?, perfil = ? WHERE idUser = ?;";
+        
+        try {
+            pst = conexao.prepareStatement(sql);
+            
+            pst.setString(6, txtIdUser.getText());            
+            pst.setString(1, txtNomeUser.getText());
+            pst.setString(2, txtFoneUser.getText());
+            pst.setString(3, txtLoginUser.getText());
+            pst.setString(4, txtSenhaUser.getText());
+            pst.setString(5, cmbPerfilUser.getSelectedItem().toString());
+            
+            int atualizado = pst.executeUpdate();
+            
+            if (atualizado > 0) {
+                JOptionPane.showMessageDialog(null, "Dados do usuário " + txtNomeUser.getText() + " alterados com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Houve algum problema" + atualizado);
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }        
+    }
+    
+    //Método DELETE do CRU ->D
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -168,6 +200,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnUpdate.setToolTipText("Editar");
         btnUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUpdate.setPreferredSize(new java.awt.Dimension(90, 90));
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/pgos/icons/deleteUser.png"))); // NOI18N
         btnDelete.setToolTipText("Deletar");
@@ -299,6 +336,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         adicionar();
     }//GEN-LAST:event_btnCreateActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        alterar();
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
