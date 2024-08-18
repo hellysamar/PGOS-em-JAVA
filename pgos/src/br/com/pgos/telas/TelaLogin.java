@@ -77,10 +77,10 @@ public class TelaLogin extends javax.swing.JFrame {
         
         if (conexao != null) {
             lblStatusConn.setText("");
-            lblStatusConn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/pgos/icons/dbAccess.png")));
+            lblStatusConn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/pgos/icons/dbOn.png")));
         } else {
             lblStatusConn.setText("");
-            lblStatusConn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/pgos/icons/dbDeined.png")));
+            lblStatusConn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/pgos/icons/dbOff.png")));
         }
     }
 
@@ -108,6 +108,10 @@ public class TelaLogin extends javax.swing.JFrame {
 
         jLabel2.setText("SENHA");
 
+        txtPassword.setText("admin");
+
+        txtUserName.setText("admin");
+
         btnLogin.setText("Acessar");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -115,7 +119,7 @@ public class TelaLogin extends javax.swing.JFrame {
             }
         });
 
-        lblStatusConn.setText("STATUS");
+        lblStatusConn.setText("Status de conexão");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -152,9 +156,9 @@ public class TelaLogin extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addGap(3, 3, 3)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnLogin)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(lblStatusConn)
                 .addGap(65, 65, 65))
         );

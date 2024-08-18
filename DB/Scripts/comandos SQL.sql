@@ -101,41 +101,33 @@ FROM tblos AS O
 INNER JOIN tblclientes AS C
 ON (O.idCliente = C.idCliente);
 
--- INCLUI UM CAMPO NA TABELA
+-- INCLUI UM CAMPO (Coluna) NA TABELA
 ALTER TABLE tblusuarios ADD COLUMN perfil VARCHAR(20) NOT NULL;
 
--- DELETA UM CAMPO DA TABELA
+-- DELETA UM CAMPO (Coluna) DA TABELA
 ALTER TABLE tblusuarios DROP COLUMN perfil;
 
 UPDATE tblusuarios SET perfil = 'user' WHERE idUser = 8;
 SELECT * FROM tblusuarios;
 
--- CRUD
--- CREATE
-INSERT INTO tblusuarios (idUser, usuario, fone, login, senha) VALUES (8, 'Juan An', '61 98888-3456', 'juan', 'juan');
-SELECT * FROM tblusuarios;
--- READ
-SELECT * FROM tblusuarios WHERE idUser = 4;
-SELECT * FROM tblusuarios;
--- UPDATE
-UPDATE tblusuarios SET usuario = 'Hellysamar Araújo' WHERE idUser = 1;
-SELECT * FROM tblusuarios;
--- DELETE
-DELETE FROM tblusuarios WHERE idUser = 7;
-SELECT * FROM tblusuarios;
 
 
 
-select * from tblusuarios;
 
-UPDATE tblusuarios SET 
-usuario='Erick Jackan',
-fone='666656544585',
-login='erick',
-senha='erick',
-perfil='user'
-WHERE idUser = 11;
 
-DELETE FROM tblUsuarios WHERE idUser = 9;
 
-select * from tblusuarios;
+
+
+
+
+
+
+
+
+
+
+
+
+USE dbpgos;
+SELECT * FROM tblClientes;
+DESCRIBE tblClientes;

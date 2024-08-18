@@ -67,9 +67,9 @@
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
               <Component id="txtPassword" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnLogin" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="59" max="32767" attributes="0"/>
+              <EmptySpace pref="47" max="32767" attributes="0"/>
               <Component id="lblStatusConn" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
           </Group>
@@ -88,8 +88,14 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="txtPassword">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="admin"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtUserName">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="admin"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btnLogin">
       <Properties>
@@ -101,7 +107,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblStatusConn">
       <Properties>
-        <Property name="text" type="java.lang.String" value="STATUS"/>
+        <Property name="text" type="java.lang.String" value="Status de conex&#xe3;o"/>
       </Properties>
     </Component>
   </SubComponents>
