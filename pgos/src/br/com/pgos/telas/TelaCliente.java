@@ -8,6 +8,9 @@ package br.com.pgos.telas;
 import br.com.pgos.dal.ModuloConexao;
 import java.sql.*;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+// Import de recursos da Biblioteca sqlitejdbc-v056.jar
+import net.proteanit.sql.DbUtils;
 /**
  *
  * @author Hellysamar
@@ -28,6 +31,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     public TelaCliente() {
         initComponents();
         conexao = ModuloConexao.conector();
+        btnDeleteCliente.setEnabled(false);
     }
     
     // Métodos CRUD 
@@ -51,10 +55,9 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                 if (foiAdicionado > 0) {
                     JOptionPane.showMessageDialog(null, "Cliente " + txtNomeCliente.getText() + " adiconado com sucesso!");
                     
-                    txtNomeCliente.setText(null);
-                    txtEnderecoCliente.setText(null);
-                    txtFoneCliente.setText(null);
-                    txtEmailCliente.setText(null);
+                    limparCampos();                    
+                    buscar();
+                    
                 } else {
                     JOptionPane.showMessageDialog(null, "Houve algum problema ao tentar adiconar o clinte " + txtNomeCliente.getText());
                 }
@@ -66,7 +69,20 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     
     // Método READ
     private void buscar() {
+        String sql = "SELECT idCliente AS ID, nomeCliente AS NOME, enderecoCliente AS ENDEREÇO, foneCliente AS TELEFONE, emailCliente AS EMAIL FROM tblClientes WHERE nomeCliente LIKE ?";
         
+        try {
+            pst = conexao.prepareStatement(sql);
+            
+            pst.setString(1, txtBuscaCliente.getText() + "%");
+            
+            rs = pst.executeQuery();
+            
+            tblClientes.setModel(DbUtils.resultSetToTableModel(rs));
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
    
     // Método UPDATE
@@ -83,7 +99,13 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                 pst = conexao.prepareStatement(sql);
                 
                 pst.setString(1, txtNomeCliente.getText());
+                pst.setString(2, txtEnderecoCliente.getText());
+                pst.setString(3, txtFoneCliente.getText());
+                pst.setString(4, txtEmailCliente.getText());
+                pst.setString(5, txtIdCliente.getText());
                 
+                btnCreateCliente.setEnabled(true);
+                btnDeleteCliente.setEnabled(false);
                 
                 // Executo o Update no banco com executeUpdate e armazena em um inteiro 1 se conseguir atualizar
                 int atualizou = pst.executeUpdate();
@@ -92,7 +114,10 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                 if (atualizou > 0) {
                     JOptionPane.showMessageDialog(null, "Alteração realizada com sucesso!");
                 
-                    txtNomeCliente.setText(null);
+                    limparCampos();
+                    
+                    buscar();
+                    
                 // Caso o update tenha dado erro, apresenta mensagem no Else
                 } else {
                     JOptionPane.showMessageDialog(null, "Houve algum problema ao tentar atualizar os dados do Cliente!");
@@ -102,13 +127,58 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
-        
-        
     }
     
     // Método DELETE
-    
+    private void deletar() {
+        String mensagemDel = "Deseja realmente excluir o cliente " + txtNomeCliente.getText() + "?";        
+        int confirma = JOptionPane.showConfirmDialog(null, mensagemDel, "Atenção", JOptionPane.YES_NO_OPTION);
+        
+        String sql = "DELETE FROM tblClientes WHERE idCliente = ?; ";
+        
+        if (confirma == JOptionPane.YES_NO_OPTION) {
+            try {
+                pst = conexao.prepareStatement(sql);
 
+                pst.setString(1, txtIdCliente.getText());
+
+                int excluido = pst.executeUpdate();
+
+                if (excluido > 0) {
+                    JOptionPane.showMessageDialog(null, "Cliente " + txtNomeCliente.getText() + " excluido com sucesso!");
+
+                    limparCampos();
+                    
+                    buscar();
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Houve algo de errado na Exclusão do Cliente!");
+            }
+        }        
+    }
+    
+    public void preencherCampos(){
+        int linha = tblClientes.getSelectedRow();
+        
+        txtIdCliente.setText(tblClientes.getModel().getValueAt(linha, 0).toString());
+        txtNomeCliente.setText(tblClientes.getModel().getValueAt(linha, 1).toString());
+        txtEnderecoCliente.setText(tblClientes.getModel().getValueAt(linha, 2).toString());
+        txtFoneCliente.setText(tblClientes.getModel().getValueAt(linha, 3).toString());
+        txtEmailCliente.setText(tblClientes.getModel().getValueAt(linha, 4).toString());
+        
+        btnCreateCliente.setEnabled(false);
+        btnDeleteCliente.setEnabled(true);
+    }
+    
+    public void limparCampos() {
+        txtNomeCliente.setText(null);
+        txtIdCliente.setText(null);
+        txtEnderecoCliente.setText(null);
+        txtFoneCliente.setText(null);
+        txtEmailCliente.setText(null);
+        
+        //buscar();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -135,13 +205,13 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         txtBuscaCliente = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblClientes = new javax.swing.JTable();
+        txtIdCliente = new javax.swing.JTextField();
 
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
         setTitle("PGOS - Gerenciamento de Clientes");
         setMaximumSize(new java.awt.Dimension(740, 587));
-        setMinimumSize(new java.awt.Dimension(128, 34));
         setPreferredSize(new java.awt.Dimension(740, 587));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -179,69 +249,113 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         btnUpdateCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/pgos/icons/updateUser.png"))); // NOI18N
         btnUpdateCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUpdateCliente.setPreferredSize(new java.awt.Dimension(90, 90));
+        btnUpdateCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateClienteActionPerformed(evt);
+            }
+        });
 
         btnDeleteCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/pgos/icons/deleteUser.png"))); // NOI18N
         btnDeleteCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnDeleteCliente.setPreferredSize(new java.awt.Dimension(90, 90));
+        btnDeleteCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteClienteActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("Pesquisar Cliente");
 
+        txtBuscaCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscaClienteKeyReleased(evt);
+            }
+        });
+
+        tblClientes = new javax.swing.JTable() {
+            public boolean  isCellEditable(int rowIndex, int colIndex){
+                return false;
+            }
+        };
         tblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "NOME", "ENDEREÇO", "TELEFONE", "EMAIL"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblClientes.setFocusable(false);
+        tblClientes.getTableHeader().setReorderingAllowed(false);
+        tblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblClientesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblClientes);
+
+        txtIdCliente.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtIdCliente.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(70, 70, 70)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(154, 154, 154)
+                .addComponent(btnCreateCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(71, 71, 71)
+                .addComponent(btnUpdateCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(73, 73, 73)
+                .addComponent(btnDeleteCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(152, 156, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(55, 55, 55)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(84, 84, 84)
-                        .addComponent(btnCreateCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(71, 71, 71)
-                        .addComponent(btnUpdateCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(73, 73, 73)
-                        .addComponent(btnDeleteCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(152, 152, 152))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel5)
+                        .addGap(469, 469, 469))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addGap(183, 183, 183))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel4)
                                     .addComponent(txtNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(txtFoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 576, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(32, 32, 32)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 7, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtIdCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(txtBuscaCliente))
-                            .addComponent(txtEmailCliente)
-                            .addComponent(txtEnderecoCliente))
-                        .addGap(71, 71, 71))))
+                                .addComponent(txtFoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtEnderecoCliente, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtEmailCliente, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(jLabel6)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtBuscaCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addGap(32, 32, 32)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,7 +373,8 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtFoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIdCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -288,6 +403,30 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         adicionar();
     }//GEN-LAST:event_btnCreateClienteActionPerformed
 
+    private void txtBuscaClienteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscaClienteKeyReleased
+        // TODO add your handling code here:
+        buscar();
+        
+        if (txtBuscaCliente.getText().isEmpty()) {
+            ((DefaultTableModel) tblClientes.getModel()).setRowCount(0);
+        }
+    }//GEN-LAST:event_txtBuscaClienteKeyReleased
+
+    private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
+        // TODO add your handling code here:
+        preencherCampos();
+    }//GEN-LAST:event_tblClientesMouseClicked
+
+    private void btnUpdateClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateClienteActionPerformed
+        // TODO add your handling code here:
+        alterar();
+    }//GEN-LAST:event_btnUpdateClienteActionPerformed
+
+    private void btnDeleteClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteClienteActionPerformed
+        // TODO add your handling code here:
+        deletar();
+    }//GEN-LAST:event_btnDeleteClienteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreateCliente;
@@ -306,6 +445,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtEmailCliente;
     private javax.swing.JTextField txtEnderecoCliente;
     private javax.swing.JTextField txtFoneCliente;
+    private javax.swing.JTextField txtIdCliente;
     private javax.swing.JTextField txtNomeCliente;
     // End of variables declaration//GEN-END:variables
 }

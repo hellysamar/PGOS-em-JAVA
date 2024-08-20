@@ -131,3 +131,7 @@ SELECT * FROM tblusuarios;
 USE dbpgos;
 SELECT * FROM tblClientes;
 DESCRIBE tblClientes;
+
+SELECT idCliente AS ID, nomeCliente AS NOME, enderecoCliente AS ENDEREÇO, foneCliente AS TELEFONE, emailCliente AS EMAIL FROM tblClientes;
+
+SELECT * FROM tblClientes WHERE nomeCliente LIKE '%an%';
