@@ -111,6 +111,11 @@ UPDATE tblusuarios SET perfil = 'user' WHERE idUser = 8;
 SELECT * FROM tblusuarios;
 
 
+ALTER TABLE tblOS ADD tipo VARCHAR(10) NOT NULL AFTER dataOS;
+DESCRIBE tblOS;
+
+ALTER TABLE tblOS ADD situacaoOS VARCHAR(20) NOT NULL AFTER tipo;
+DESCRIBE tblOS;
 
 
 
@@ -121,16 +126,13 @@ SELECT * FROM tblusuarios;
 
 
 
-
-
-
-
+SELECT idCliente AS ID_Cliente, nomeCliente AS Nome, foneCliente AS Telefone FROM tblClientes WHERE nomeCliente LIKE 'l%'
 
 
 
 USE dbpgos;
-SELECT * FROM tblClientes;
-DESCRIBE tblClientes;
+SELECT * FROM tblOS;
+DESCRIBE tblOS;
 
 SELECT idCliente AS ID, nomeCliente AS NOME, enderecoCliente AS ENDEREÇO, foneCliente AS TELEFONE, emailCliente AS EMAIL FROM tblClientes;
 

@@ -32,6 +32,10 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         initComponents();
         conexao = ModuloConexao.conector();
         btnDeleteCliente.setEnabled(false);
+        
+        if (txtIdCliente.getText().isEmpty()) {
+            btnUpdateCliente.setEnabled(false);
+        }
     }
     
     // Métodos CRUD 
@@ -176,9 +180,10 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         txtEnderecoCliente.setText(null);
         txtFoneCliente.setText(null);
         txtEmailCliente.setText(null);
-        
+                
         //buscar();
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -324,10 +329,9 @@ public class TelaCliente extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(55, 55, 55)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addGap(469, 469, 469))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -409,6 +413,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         
         if (txtBuscaCliente.getText().isEmpty()) {
             ((DefaultTableModel) tblClientes.getModel()).setRowCount(0);
+            limparCampos();
         }
     }//GEN-LAST:event_txtBuscaClienteKeyReleased
 
