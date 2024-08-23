@@ -116,24 +116,35 @@ DESCRIBE tblOS;
 
 ALTER TABLE tblOS ADD situacaoOS VARCHAR(20) NOT NULL AFTER tipo;
 DESCRIBE tblOS;
+ALTER TABLE tblOS MODIFY COLUMN situacaoOS varchar(30);
+
+DESCRIBE tblOS; 
 
 
 
 
+UPDATE tblOS SET tipo = 'OS', situacaoOS = 'Entregue na Assistência' WHERE os = 2;
+SELECT * FROM tblOS;
+UPDATE tblOS SET tipo = ?, situacaoOS = ?, equipamento = ?, defeito = ?, servico = ?, tecnico = ?, valor = ?, idCliente = ? WHERE os = ?;
 
+SELECT idCliente AS ID_Cliente, nomeCliente AS Nome, foneCliente AS Telefone FROM tblClientes WHERE nomeCliente LIKE 'l%';
 
-
-
-
-
-SELECT idCliente AS ID_Cliente, nomeCliente AS Nome, foneCliente AS Telefone FROM tblClientes WHERE nomeCliente LIKE 'l%'
-
-
+INSERT INTO tblOS (tipo, situacaoOS, equipamento, defeito, servico, tecnico, valor, idCliente) VALUES ('OS', 'Entregue na Assistência', 'macbook', 'tela preta', 'substituição de tela', 'Fulano Tec', 90, 4);
+SELECT * FROM tblOS;
 
 USE dbpgos;
-SELECT * FROM tblOS;
+SELECT * FROM tblOS WHERE os = 6;
 DESCRIBE tblOS;
 
 SELECT idCliente AS ID, nomeCliente AS NOME, enderecoCliente AS ENDEREÇO, foneCliente AS TELEFONE, emailCliente AS EMAIL FROM tblClientes;
 
 SELECT * FROM tblClientes WHERE nomeCliente LIKE '%an%';
+
+
+SELECT
+O.os, dataOS, tipo, situacaoOS, equipamento, defeito, servico, tecnico, valor, O.idCliente,
+C.nomeCliente
+FROM tblos AS O
+INNER JOIN tblclientes AS C
+ON (O.idCliente = C.idCliente) 
+WHERE O.os = 6;
