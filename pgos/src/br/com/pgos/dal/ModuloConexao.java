@@ -22,9 +22,9 @@ public class ModuloConexao {
         // Chamada do Driver importado em Bibliotecas
         String driver = "com.mysql.cj.jdbc.Driver";
         // Armazenando informações referente ao banco
-        String url = "jdbc:mysql://localhost:3306/dbpgos";
-        String user = "root";
-        String password = "apto1001";
+        String url = "jdbc:mysql://localhost:3306/dbpgos?characterEncoding=utf-8";
+        String user = "dba";
+        String password = "@pto1001";
         
         // Estabelecendo conexão com o Banco de dados
         try {

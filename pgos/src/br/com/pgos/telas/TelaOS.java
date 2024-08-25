@@ -8,7 +8,11 @@ import java.sql.*;
 import net.proteanit.sql.DbUtils;
 import br.com.pgos.dal.ModuloConexao;
 import java.time.temporal.IsoFields;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -93,6 +97,9 @@ public class TelaOS extends javax.swing.JInternalFrame {
                         JOptionPane.showMessageDialog(null, "Orçamento emitido com sucesso!");
                     }
                     
+                    // chama o metodo para que recupera e insere o último numero na OS.
+                    recuperaUltimaOS();
+                    
                     //Limpo todos os campos após emitida a OS
                     //limparCampos();                    
                     btnImprimirOS.setEnabled(true);
@@ -131,13 +138,14 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 txtDefeitoOS.setText(rs.getString(6));
                 txtServicoOS.setText(rs.getString(7));
                 txtTecnicoOS.setText(rs.getString(8));
-                txtValorOS.setText(rs.getString(9));
+                txtValorOS.setText(rs.getString(9).replace(".", ","));
                 txtIdClienteOS.setText(rs.getString(10));                
                 txtClienteOS.setText(rs.getString(11));
                 
                 btnCreateOS.setEnabled(false);
                 btnUpdateOS.setEnabled(true);
                 btnDeleteOS.setEnabled(true);
+                btnImprimirOS.setEnabled(true);
                 
             } else {
                 JOptionPane.showMessageDialog(null, "Ordem de serviço Nr " + numeroOS + " não encontrada!");
@@ -248,6 +256,39 @@ public class TelaOS extends javax.swing.JInternalFrame {
         btnDeleteOS.setEnabled(false);
         btnImprimirOS.setEnabled(false);
     }
+    
+    private void imprimirOS() {
+        int confirma = JOptionPane.showConfirmDialog(null, "Deseja imprimir a " + tipo + "?", "Atenção", JOptionPane.YES_NO_OPTION);
+        
+        if (confirma == JOptionPane.YES_OPTION) {
+            try {
+                //usa-se uma classe HashMap para criar o filtro
+                HashMap filtro = new HashMap();
+                filtro.put("os", Integer.parseInt(txtNumeroOS.getText())); // "os" é o nome do parametro dado no iReport
+                
+                JasperPrint print = JasperFillManager.fillReport("C:\\reports\\ordemDeServico.jasper", filtro, conexao);
+                
+                JasperViewer.viewReport(print, false);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }
+    
+    private void recuperaUltimaOS() {
+        String sql = "SELECT MAX(os) FROM tblOS";
+        
+        try {
+            pst = conexao.prepareStatement(sql);
+            rs = pst.executeQuery();
+            
+            if (rs.next()) {
+                txtNumeroOS.setText(rs.getString(1));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -300,7 +341,6 @@ public class TelaOS extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setTitle("PGOS - Ordens de Serviço");
         setMaximumSize(new java.awt.Dimension(740, 587));
-        setMinimumSize(new java.awt.Dimension(128, 34));
         setPreferredSize(new java.awt.Dimension(740, 587));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -571,6 +611,11 @@ public class TelaOS extends javax.swing.JInternalFrame {
         btnImprimirOS.setMaximumSize(new java.awt.Dimension(97, 73));
         btnImprimirOS.setMinimumSize(new java.awt.Dimension(97, 73));
         btnImprimirOS.setPreferredSize(new java.awt.Dimension(90, 90));
+        btnImprimirOS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirOSActionPerformed(evt);
+            }
+        });
 
         jLabel11.setText("* Campos obrigatórios");
 
@@ -582,16 +627,14 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cmbSituacaoOS, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -664,13 +707,13 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel11)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCreateOS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnReadOS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpdateOS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDeleteOS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnImprimirOS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         setBounds(0, 0, 740, 593);
@@ -721,6 +764,11 @@ public class TelaOS extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         excluirOS();
     }//GEN-LAST:event_btnDeleteOSActionPerformed
+
+    private void btnImprimirOSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirOSActionPerformed
+        // TODO add your handling code here:
+        imprimirOS();
+    }//GEN-LAST:event_btnImprimirOSActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

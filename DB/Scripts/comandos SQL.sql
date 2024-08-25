@@ -148,3 +148,11 @@ FROM tblos AS O
 INNER JOIN tblclientes AS C
 ON (O.idCliente = C.idCliente) 
 WHERE O.os = 6;
+
+DESCRIBE tblClientes;
+SELECT
+OS.os, dataos, tipo, situacaoOS, equipamento, tecnico, valor,
+CL.nomeCliente, foneCliente
+FROM tblOS AS OS
+INNER JOIN tblClientes AS CL
+ON (OS.idCliente = CL.idCliente);

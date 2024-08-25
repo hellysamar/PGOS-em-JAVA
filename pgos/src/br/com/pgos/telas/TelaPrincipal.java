@@ -6,9 +6,14 @@
 package br.com.pgos.telas;
 
 //import java.sql.Date;
+import br.com.pgos.dal.ModuloConexao;
 import java.util.Date;
 import java.text.DateFormat;
 import javax.swing.JOptionPane;
+import java.sql.*;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -16,11 +21,13 @@ import javax.swing.JOptionPane;
  */
 public class TelaPrincipal extends javax.swing.JFrame {
 
+    Connection conexao = null;
     /**
      * Creates new form TelaPrincipal
      */
     public TelaPrincipal() {
         initComponents();
+        conexao = ModuloConexao.conector();
     }
 
     /**
@@ -41,6 +48,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         menuCadOS = new javax.swing.JMenuItem();
         menuCadUsuario = new javax.swing.JMenuItem();
         menuRel = new javax.swing.JMenu();
+        menuRelClientes = new javax.swing.JMenuItem();
         menuRelServicos = new javax.swing.JMenuItem();
         menuAjuda = new javax.swing.JMenu();
         menuAjudaSobre = new javax.swing.JMenuItem();
@@ -110,8 +118,21 @@ public class TelaPrincipal extends javax.swing.JFrame {
         menuRel.setText("Relatório");
         menuRel.setEnabled(false);
 
+        menuRelClientes.setText("Clientes");
+        menuRelClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRelClientesActionPerformed(evt);
+            }
+        });
+        menuRel.add(menuRelClientes);
+
         menuRelServicos.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
         menuRelServicos.setText("Serviços");
+        menuRelServicos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRelServicosActionPerformed(evt);
+            }
+        });
         menuRel.add(menuRelServicos);
 
         Menu.add(menuRel);
@@ -215,6 +236,39 @@ public class TelaPrincipal extends javax.swing.JFrame {
         desktop.add(os);
     }//GEN-LAST:event_menuCadOSActionPerformed
 
+    private void menuRelClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRelClientesActionPerformed
+        // Geração de relatório de clientes:
+        int confirma = JOptionPane.showConfirmDialog(null, "Deseja imprimir o relatório de Clientes?", "Atenção!", JOptionPane.YES_NO_OPTION);
+        
+        if (confirma == JOptionPane.YES_OPTION) {
+            try {
+                // usando classe JasperPrint para preparar a impressão do relatorio
+                JasperPrint print = JasperFillManager.fillReport("C:\\reports\\relatorioDeClientes.jasper", null, conexao);
+                
+                // exibe relatorio atraves da classe JasperViewer
+                JasperViewer.viewReport(print, false);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+        
+    }//GEN-LAST:event_menuRelClientesActionPerformed
+
+    private void menuRelServicosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRelServicosActionPerformed
+        // TODO add your handling code here:
+        int confirma = JOptionPane.showConfirmDialog(null, "Deseja emitir o Relatório de Serviços?", "Atenção!", JOptionPane.YES_NO_OPTION);
+        
+        if (confirma == JOptionPane.YES_OPTION) {
+            try {
+                JasperPrint print = JasperFillManager.fillReport("C:\\reports\\relatorioDeOS.jasper", null, conexao);
+                
+                JasperViewer.viewReport(print, false);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }//GEN-LAST:event_menuRelServicosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -264,6 +318,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu menuOpcao;
     private javax.swing.JMenuItem menuOpcaoSair;
     public static javax.swing.JMenu menuRel;
+    private javax.swing.JMenuItem menuRelClientes;
     private javax.swing.JMenuItem menuRelServicos;
     // End of variables declaration//GEN-END:variables
 }
