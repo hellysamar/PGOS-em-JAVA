@@ -1,7 +1,25 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2024 Hellysamar.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.    
  */
 package br.com.pgos.telas;
 
@@ -9,10 +27,10 @@ import br.com.pgos.dal.ModuloConexao;
 import java.sql.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-// Import de recursos da Biblioteca sqlitejdbc-v056.jar
+// Import de recursos da Biblioteca rs2xml.jar
 import net.proteanit.sql.DbUtils;
 /**
- *
+ * Tela de Clientes
  * @author Hellysamar
  */
 public class TelaCliente extends javax.swing.JInternalFrame {
@@ -26,7 +44,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     ResultSet rs = null;
     
     /**
-     * Creates new form TelaCliente
+     * Criado o contrutor TelaCliente
      */
     public TelaCliente() {
         initComponents();
@@ -38,40 +56,52 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         }
     }
     
-    // Métodos CRUD 
-    // Método CREATE
+    /**
+     * Método responsável por adicionar um Cliente
+     * CREATE do CRUD
+     */
     private void adicionar() {
+        // Armazeno o Script numa variavel sql.
         String sql = "INSERT INTO tblClientes (nomeCliente, enderecoCliente, foneCliente, emailCliente) VALUES (?, ?, ?, ?);";
         
         // IF para verificar campos obrigatórios
-        if(/*Campo Obrigatório vazío*/ (txtNomeCliente.getText().isEmpty()) || (txtFoneCliente.getText().isEmpty())) {
+        // Verifico se há campos obrigatórios vazios, se houver, apresenta mensagem de erro
+        if((txtNomeCliente.getText().isEmpty()) || (txtFoneCliente.getText().isEmpty())) {
             JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios!");
         } else {
             try {
+            // TRY - Atualiza o Script com os dados inseridos nos campos substituindo as interrogações, para alteração no banco
                 pst = conexao.prepareStatement(sql);
                 pst.setString(1, txtNomeCliente.getText());
                 pst.setString(2, txtEnderecoCliente.getText());
                 pst.setString(3, txtFoneCliente.getText());
                 pst.setString(4, txtEmailCliente.getText());
 
+                // Executo o Update no banco com executeUpdate e armazena em um inteiro 1 se conseguir atualizar
                 int foiAdicionado = pst.executeUpdate();
 
+                // Verifica se foi feito o Update, se SIM, apresenta mensagem de Sucesso e apaga os campos de Texto,
                 if (foiAdicionado > 0) {
                     JOptionPane.showMessageDialog(null, "Cliente " + txtNomeCliente.getText() + " adiconado com sucesso!");
                     
                     limparCampos();                    
                     buscar();
                     
+                // Caso o update tenha dado erro, apresenta mensagem no Else
                 } else {
                     JOptionPane.showMessageDialog(null, "Houve algum problema ao tentar adiconar o clinte " + txtNomeCliente.getText());
                 }
+            // Apresento mensagem de erro CASO haja algum erro || Excessão
             } catch (Exception e) {
                 JOptionPane.showConfirmDialog(null, e);
             }
         }
     }
     
-    // Método READ
+    /**
+     * Método responsável por buscar um Cliente já cadastrado
+     * READ do CRUD
+     */
     private void buscar() {
         String sql = "SELECT idCliente AS ID, nomeCliente AS NOME, enderecoCliente AS ENDEREÇO, foneCliente AS TELEFONE, emailCliente AS EMAIL FROM tblClientes WHERE nomeCliente LIKE ?";
         
@@ -89,16 +119,16 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         }
     }
    
-    // Método UPDATE
+    /**
+     * Método responsável por alterar um Cliente
+     * UPDATE do CRUD
+     */
     private void alterar() {
-        // Armazeno o Script numa variavel.
         String sql = "UPDATE tblClientes SET nomeCliente = ?, enderecoCliente = ?, foneCliente = ?, emailCliente = ? WHERE idCliente = ?;";
         
-        // Verifico se há campos obrigatórios vazios
         if((txtNomeCliente.getText().isEmpty()) || (txtFoneCliente.getText().isEmpty())) {
             JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios!");
         } else {
-            // TRY - Atualizo o Script com os dados inseridos para alteração no banco
             try {
                 pst = conexao.prepareStatement(sql);
                 
@@ -109,12 +139,11 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                 pst.setString(5, txtIdCliente.getText());
                 
                 btnCreateCliente.setEnabled(true);
+                btnUpdateCliente.setEnabled(false);
                 btnDeleteCliente.setEnabled(false);
                 
-                // Executo o Update no banco com executeUpdate e armazena em um inteiro 1 se conseguir atualizar
                 int atualizou = pst.executeUpdate();
                 
-                // Verifica se foi feito o Update, se SIM, apresenta mensagem de Sucesso e apaga os campos de Texto,
                 if (atualizou > 0) {
                     JOptionPane.showMessageDialog(null, "Alteração realizada com sucesso!");
                 
@@ -122,18 +151,19 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                     
                     buscar();
                     
-                // Caso o update tenha dado erro, apresenta mensagem no Else
                 } else {
                     JOptionPane.showMessageDialog(null, "Houve algum problema ao tentar atualizar os dados do Cliente!");
                 }
-            // Apresento mensagem de erro CASO haja algum erro || Excessão
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
     }
     
-    // Método DELETE
+    /**
+     * Método responsável por excluir um Cliente
+     * DELETE do CRUD
+     */
     private void deletar() {
         String mensagemDel = "Deseja realmente excluir o cliente " + txtNomeCliente.getText() + "?";        
         int confirma = JOptionPane.showConfirmDialog(null, mensagemDel, "Atenção", JOptionPane.YES_NO_OPTION);
@@ -161,6 +191,9 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         }        
     }
     
+    /**
+     * Método responsável por preencher os campos ao selecionar o cliente já cadastrado na tabela
+     */
     public void preencherCampos(){
         int linha = tblClientes.getSelectedRow();
         
@@ -171,9 +204,13 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         txtEmailCliente.setText(tblClientes.getModel().getValueAt(linha, 4).toString());
         
         btnCreateCliente.setEnabled(false);
+        btnUpdateCliente.setEnabled(true);
         btnDeleteCliente.setEnabled(true);
     }
     
+    /**
+     * Método responsável por limpar os campos se inserção, ao incluir, alterar, deletar ou buscar cliente
+     */
     public void limparCampos() {
         txtNomeCliente.setText(null);
         txtIdCliente.setText(null);
@@ -403,12 +440,10 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCreateClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateClienteActionPerformed
-        // TODO add your handling code here:
         adicionar();
     }//GEN-LAST:event_btnCreateClienteActionPerformed
 
     private void txtBuscaClienteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscaClienteKeyReleased
-        // TODO add your handling code here:
         buscar();
         
         if (txtBuscaCliente.getText().isEmpty()) {
@@ -418,17 +453,14 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtBuscaClienteKeyReleased
 
     private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
-        // TODO add your handling code here:
         preencherCampos();
     }//GEN-LAST:event_tblClientesMouseClicked
 
     private void btnUpdateClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateClienteActionPerformed
-        // TODO add your handling code here:
         alterar();
     }//GEN-LAST:event_btnUpdateClienteActionPerformed
 
     private void btnDeleteClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteClienteActionPerformed
-        // TODO add your handling code here:
         deletar();
     }//GEN-LAST:event_btnDeleteClienteActionPerformed
 

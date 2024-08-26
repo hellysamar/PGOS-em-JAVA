@@ -1,12 +1,30 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2024 Hellysamar.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.    
  */
 package br.com.pgos.telas;
 
 /**
- *
+ * 
  * @author Hellysamar
  */
 
@@ -28,7 +46,10 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         conexao = ModuloConexao.conector();
     }
 
-    //Método CREATE do C<- RUD
+    /**
+     * Método responsável por criar um usuário
+     * CREATE do CRUD
+     */
     private void adicionar() {
         String sql = "INSERT INTO tblUsuarios (idUser, usuario, fone, login, senha, perfil) VALUES (?, ?, ?, ?, ?, ?);";
         
@@ -41,7 +62,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             pst.setString(5, txtSenhaUser.getText());
             pst.setString(6, cmbPerfilUser.getSelectedItem().toString());
             
-            // Se algum campo obrigatório vazio, não executar o INSERT, senão executa o INSERT
             if ((txtIdUser.getText().isEmpty()) || (txtNomeUser.getText().isEmpty()) || (txtLoginUser.getText().isEmpty()) || (txtSenhaUser.getText().isEmpty()) || (cmbPerfilUser.getSelectedItem().toString().isEmpty())){
                 JOptionPane.showMessageDialog(null, "Preencha os campos *Obrigatórios!");
             } else {
@@ -60,11 +80,13 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
-        }
-        
+        }        
     }
     
-    //Método READ do C ->R<- UD
+    /**
+     * Método responsável por buscar um usuário preenchendo seus dados apartir da tabela
+     * READ do CRUD
+     */
     private void consultar() {
         String sql = "SELECT * FROM tblUsuarios WHERE idUser = ?;";
         
@@ -94,7 +116,10 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         }
     }
     
-    //Método UPDATE do CR ->U<- D
+    /**
+     * Método responsável por atualizar dados do Usuário
+     * UPDATE do CRUD
+     */
     private void alterar() {
         String sql = "UPDATE tblUsuarios SET usuario = ?, fone = ?, login = ?, senha = ?, perfil = ? WHERE idUser = ?;";
         
@@ -108,12 +133,9 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             pst.setString(4, txtSenhaUser.getText());
             pst.setString(5, cmbPerfilUser.getSelectedItem().toString());
             
-            /*SE Campos Obrigatórios VAZÍOS*/
             if ((txtIdUser.getText().isEmpty()) || (txtNomeUser.getText().isEmpty()) || (txtLoginUser.getText().isEmpty()) || (txtSenhaUser.getText().isEmpty()) || (cmbPerfilUser.getSelectedItem().toString().isEmpty())) {
-                // Apresenta mensagem de obrigatoriedade
                 JOptionPane.showMessageDialog(null, "Preencha os Campos Obrigatórios!");
             } else {
-                // SENÃO Atualiza o Banco
                 int atualizado = pst.executeUpdate();
 
                 if (atualizado > 0) {
@@ -127,7 +149,10 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         }        
     }
     
-    //Método DELETE do CRU ->D
+    /**
+     * Método responsável por Excluir um Usuário do Sistema
+     * DELETE do CRUD
+     */
     private void remover() {
         String sql = "DELETE FROM tblUsuarios WHERE idUser = ?;";
         int confirma = JOptionPane.showConfirmDialog(null, "Confirma remoção do usuário " + txtNomeUser.getText() + "?", "Atenção!", JOptionPane.YES_NO_OPTION);
@@ -365,22 +390,18 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtIdUserActionPerformed
 
     private void btnReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReadActionPerformed
-        // TODO add your handling code here:
         consultar();
     }//GEN-LAST:event_btnReadActionPerformed
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
-        // TODO add your handling code here:
         adicionar();
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        // TODO add your handling code here:
         alterar();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        // TODO add your handling code here:
         remover();
     }//GEN-LAST:event_btnDeleteActionPerformed
 

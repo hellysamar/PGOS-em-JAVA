@@ -93,54 +93,28 @@ INSERT INTO tblos (
 );
 SELECT * FROM tblos;
 
--- Traz informações de duas ou mais tabelas
-SELECT
-O.os, equipamento, defeito, servico, valor,
-C.nomeCliente, foneCliente
-FROM tblos AS O
-INNER JOIN tblclientes AS C
-ON (O.idCliente = C.idCliente);
 
 -- INCLUI UM CAMPO (Coluna) NA TABELA
 ALTER TABLE tblusuarios ADD COLUMN perfil VARCHAR(20) NOT NULL;
 
+-- ADICIONA UM NOVO CAMPO A TABELA, DEPOIS DE UM CAMPO JÁ EXISTENTE, EXEMPLO APÓS dataOS
+ALTER TABLE tblOS ADD tipo VARCHAR(10) NOT NULL AFTER dataOS;
+
 -- DELETA UM CAMPO (Coluna) DA TABELA
 ALTER TABLE tblusuarios DROP COLUMN perfil;
 
-UPDATE tblusuarios SET perfil = 'user' WHERE idUser = 8;
-SELECT * FROM tblusuarios;
-
-
-ALTER TABLE tblOS ADD tipo VARCHAR(10) NOT NULL AFTER dataOS;
-DESCRIBE tblOS;
-
-ALTER TABLE tblOS ADD situacaoOS VARCHAR(20) NOT NULL AFTER tipo;
-DESCRIBE tblOS;
+-- ALTERA O NOME E TIPO DE UM CAMPO DA TABELA
 ALTER TABLE tblOS MODIFY COLUMN situacaoOS varchar(30);
 
 DESCRIBE tblOS; 
 
 
-
-
-UPDATE tblOS SET tipo = 'OS', situacaoOS = 'Entregue na Assistência' WHERE os = 2;
-SELECT * FROM tblOS;
-UPDATE tblOS SET tipo = ?, situacaoOS = ?, equipamento = ?, defeito = ?, servico = ?, tecnico = ?, valor = ?, idCliente = ? WHERE os = ?;
-
-SELECT idCliente AS ID_Cliente, nomeCliente AS Nome, foneCliente AS Telefone FROM tblClientes WHERE nomeCliente LIKE 'l%';
-
-INSERT INTO tblOS (tipo, situacaoOS, equipamento, defeito, servico, tecnico, valor, idCliente) VALUES ('OS', 'Entregue na Assistência', 'macbook', 'tela preta', 'substituição de tela', 'Fulano Tec', 90, 4);
-SELECT * FROM tblOS;
-
-USE dbpgos;
-SELECT * FROM tblOS WHERE os = 6;
-DESCRIBE tblOS;
-
-SELECT idCliente AS ID, nomeCliente AS NOME, enderecoCliente AS ENDEREÇO, foneCliente AS TELEFONE, emailCliente AS EMAIL FROM tblClientes;
-
+-- SELECIONANDO UM NOME QUE CONTENHA an NO TEXTO, COMO ALanA ou TanIA POR EXEMPLO, E HOUVER O % APENAS NO FINAL DA CLAUSULA ENTÃO A BUSCA SERÁ FEITA 
+-- CONTENDO an NO INICIO DA PALAVRA, COMO anA ou anELISE, SE % ESTIVER NO INICIO ENTÃO OS EXEPLOS SÃO SEBASTIan, ALan. UTILIZANDO LIKE
 SELECT * FROM tblClientes WHERE nomeCliente LIKE '%an%';
 
 
+-- SELEÇÃO FEITA EM DUAS OU MAIS TABELAS COM CHAVE PRIMARIA E ESTRANGEIRA, QUE NO CASO É idCliente, COM INNER JOIN
 SELECT
 O.os, dataOS, tipo, situacaoOS, equipamento, defeito, servico, tecnico, valor, O.idCliente,
 C.nomeCliente

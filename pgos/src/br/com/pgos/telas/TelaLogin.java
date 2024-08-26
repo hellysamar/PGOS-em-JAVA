@@ -1,7 +1,25 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2024 Hellysamar.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.    
  */
 package br.com.pgos.telas;
 
@@ -10,7 +28,7 @@ import br.com.pgos.dal.ModuloConexao;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 /**
- *
+ * Tela principal de login para acessar o Programa
  * @author Hellysamar
  */
 public class TelaLogin extends javax.swing.JFrame {
@@ -19,6 +37,9 @@ public class TelaLogin extends javax.swing.JFrame {
     PreparedStatement pst = null;
     ResultSet rs = null;
     
+    /**
+     * Método responsável por acessar o Programa
+     */
     public void logar() {
         String sql = "SELECT * FROM tblusuarios WHERE login = ? AND senha = ?";
         
@@ -72,8 +93,6 @@ public class TelaLogin extends javax.swing.JFrame {
         initComponents();
         
         conexao = ModuloConexao.conector();
-        //a linha abaixo serve de apoio para o Dev saber o estatus de conexão
-        System.out.println(conexao);
         
         if (conexao != null) {
             lblStatusConn.setText("");
@@ -108,9 +127,11 @@ public class TelaLogin extends javax.swing.JFrame {
 
         jLabel2.setText("SENHA");
 
-        txtPassword.setText("admin");
-
-        txtUserName.setText("admin");
+        txtUserName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUserNameActionPerformed(evt);
+            }
+        });
 
         btnLogin.setText("Acessar");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -168,9 +189,12 @@ public class TelaLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // chama o método logar
-        logar();
+      logar();
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void txtUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUserNameActionPerformed
 
     /**
      * @param args the command line arguments

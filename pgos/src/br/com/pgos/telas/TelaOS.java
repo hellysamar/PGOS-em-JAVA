@@ -1,7 +1,25 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2024 Hellysamar.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.    
  */
 package br.com.pgos.telas;
 import java.sql.*;
@@ -15,7 +33,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
 /**
- *
+ * Tela de Ordem de Serviço e Orçamento
  * @author Hellysamar
  */
 public class TelaOS extends javax.swing.JInternalFrame {
@@ -40,6 +58,10 @@ public class TelaOS extends javax.swing.JInternalFrame {
         btnImprimirOS.setEnabled(false);
     }
     
+    /**
+     * Método responsável por buscar Cliente cadastrado
+     * READ do CRUD
+     */
     private void consultarCliente() {
         String sql = "SELECT idCliente AS ID_Cliente, nomeCliente AS Nome, foneCliente AS Telefone FROM tblClientes WHERE nomeCliente LIKE ?";
         
@@ -56,15 +78,19 @@ public class TelaOS extends javax.swing.JInternalFrame {
         }
     }
     
+    /**
+     * Método responsável por selecionar o Cliente na tabela após consulta
+     */
     private void preencherCampo() {
         int linhaTabela = tblClientesOS.getSelectedRow();
         txtIdClienteOS.setText(tblClientesOS.getModel().getValueAt(linhaTabela, 0).toString());
-        txtClienteOS.setText(tblClientesOS.getModel().getValueAt(linhaTabela, 1).toString());
-        
+        txtClienteOS.setText(tblClientesOS.getModel().getValueAt(linhaTabela, 1).toString());        
     }
 
-    // CRUD
-    // CREATE
+    /**
+     * Método responsável por Emitir Ordem de Serviço e Orçamento para o Serviço a ser prestado
+     * CREATE do CRUD
+     */
     private void emitirOS() {
         String sql = "INSERT INTO tblOS (tipo, situacaoOS, equipamento, defeito, servico, tecnico, valor, idCliente) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
@@ -79,12 +105,11 @@ public class TelaOS extends javax.swing.JInternalFrame {
             pst.setString(6, txtTecnicoOS.getText());
             if (txtValorOS.getText().isEmpty()) {
                 txtValorOS.setText("0.00");
-            } else {
             }
             pst.setString(7, txtValorOS.getText().replace(",", "."));
             pst.setString(8, txtIdClienteOS.getText());
             
-            if ( /*CAMPOS OBRG VAZIOS*/ (txtEquipamentoOS.getText().isEmpty()) || (txtDefeitoOS.getText().isEmpty()) || (txtIdClienteOS.getText().isEmpty())) {
+            if ((txtEquipamentoOS.getText().isEmpty()) || (txtDefeitoOS.getText().isEmpty()) || (txtIdClienteOS.getText().isEmpty())) {
                 JOptionPane.showMessageDialog(null, "Preencha os campos *obrigatório!");
             } else {
                 int osEmitida = pst.executeUpdate();
@@ -97,11 +122,8 @@ public class TelaOS extends javax.swing.JInternalFrame {
                         JOptionPane.showMessageDialog(null, "Orçamento emitido com sucesso!");
                     }
                     
-                    // chama o metodo para que recupera e insere o último numero na OS.
                     recuperaUltimaOS();
-                    
-                    //Limpo todos os campos após emitida a OS
-                    //limparCampos();                    
+                                      
                     btnImprimirOS.setEnabled(true);
                     btnCreateOS.setEnabled(false);
                     btnReadOS.setEnabled(false);
@@ -112,11 +134,13 @@ public class TelaOS extends javax.swing.JInternalFrame {
         }
     }
     
-    // READ
+    /**
+     * Método responsável por buscar por um OS pelo seu número
+     * READ do CRUD
+     */
     private void consultarOS() {
         String numeroOS = JOptionPane.showInputDialog("Informe o número da Ordem de Serviço:");
         String sql = "SELECT O.os, date_format(dataOS, '%d/%m/%Y - %H:%i'), tipo, situacaoOS, equipamento, defeito, servico, tecnico, valor, O.idCliente, C.nomeCliente FROM tblos AS O INNER JOIN tblclientes AS C ON (O.idCliente = C.idCliente) WHERE O.os = " + numeroOS;
-//        String sql = "SELECT * FROM tblOS WHERE os = " + numeroOS;
         
         try {
             pst = conexao.prepareStatement(sql);
@@ -161,7 +185,10 @@ public class TelaOS extends javax.swing.JInternalFrame {
         }
     }
     
-    // UPDATE
+    /**
+     * Método responsável por atualizar dados da OS, bem como alterar a Situação e o tipo quando de Orçamento para Ordem de Serviço
+     * UPDATE do CRUD
+     */
     private void atualizarOS() {
         String sql = "UPDATE tblOS SET tipo = ?, situacaoOS = ?, equipamento = ?, defeito = ?, servico = ?, tecnico = ?, valor = ?, idCliente = ? WHERE os = ?";
         
@@ -205,7 +232,10 @@ public class TelaOS extends javax.swing.JInternalFrame {
         }
     }
     
-    // DELETE
+    /**
+     * Método responsável por Excluir uma OS/OC do Sistema
+     * DELETE do CRUD
+     */
     private void excluirOS() {
         int confirmDelete;
         if (tipo == "OC") {
@@ -232,10 +262,11 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
-        
-        
     }
     
+    /**
+     * Método responsável por limpar os campos quando realizada alguma ação CRUD referente as OS
+     */
     private void limparCampos() {
         txtNumeroOS.setText(null);
         txtDataOS.setText(null);
@@ -257,6 +288,9 @@ public class TelaOS extends javax.swing.JInternalFrame {
         btnImprimirOS.setEnabled(false);
     }
     
+    /**
+     * Método responsável por preparar uma OS para a impressão utilizando a biblioteca iReporter
+     */
     private void imprimirOS() {
         int confirma = JOptionPane.showConfirmDialog(null, "Deseja imprimir a " + tipo + "?", "Atenção", JOptionPane.YES_NO_OPTION);
         
@@ -266,7 +300,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 HashMap filtro = new HashMap();
                 filtro.put("os", Integer.parseInt(txtNumeroOS.getText())); // "os" é o nome do parametro dado no iReport
                 
-                JasperPrint print = JasperFillManager.fillReport("C:\\reports\\ordemDeServico.jasper", filtro, conexao);
+                JasperPrint print = JasperFillManager.fillReport(getClass().getResourceAsStream("/reports/ordemDeServico.jasper"), filtro, conexao);
                 
                 JasperViewer.viewReport(print, false);
             } catch (Exception e) {
@@ -275,6 +309,9 @@ public class TelaOS extends javax.swing.JInternalFrame {
         }
     }
     
+    /**
+     * Método responsável por recuperar e incluir o Numero da OS recem gerada para adiciona-lo a OS para impressão
+     */
     private void recuperaUltimaOS() {
         String sql = "SELECT MAX(os) FROM tblOS";
         
@@ -720,53 +757,43 @@ public class TelaOS extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtBuscaClienteOSKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscaClienteOSKeyReleased
-        // TODO add your handling code here:
         consultarCliente();
     }//GEN-LAST:event_txtBuscaClienteOSKeyReleased
 
     private void tblClientesOSMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesOSMouseClicked
-        // TODO add your handling code here:
         preencherCampo();
     }//GEN-LAST:event_tblClientesOSMouseClicked
 
     private void rbtOrcamentoOSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtOrcamentoOSActionPerformed
-        // TODO add your handling code here:
         tipo = "OC";
     }//GEN-LAST:event_rbtOrcamentoOSActionPerformed
 
     private void rbtOSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtOSActionPerformed
-        // TODO add your handling code here:
         tipo = "OS";
     }//GEN-LAST:event_rbtOSActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        // TODO add your handling code here:
         rbtOrcamentoOS.setSelected(true);
         tipo = "OC";
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void btnCreateOSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateOSActionPerformed
-        // TODO add your handling code here:
         emitirOS();
     }//GEN-LAST:event_btnCreateOSActionPerformed
 
     private void btnReadOSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReadOSActionPerformed
-        // TODO add your handling code here:
         consultarOS();
     }//GEN-LAST:event_btnReadOSActionPerformed
 
     private void btnUpdateOSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateOSActionPerformed
-        // TODO add your handling code here:
         atualizarOS();
     }//GEN-LAST:event_btnUpdateOSActionPerformed
 
     private void btnDeleteOSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteOSActionPerformed
-        // TODO add your handling code here:
         excluirOS();
     }//GEN-LAST:event_btnDeleteOSActionPerformed
 
     private void btnImprimirOSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirOSActionPerformed
-        // TODO add your handling code here:
         imprimirOS();
     }//GEN-LAST:event_btnImprimirOSActionPerformed
 

@@ -1,7 +1,25 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2024 Hellysamar.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.    
  */
 package br.com.pgos.telas;
 
@@ -196,12 +214,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         // Seta automativamente a data atual local na variavel lblDataLocal
         Date data = new Date();
         DateFormat formatar = DateFormat.getDateInstance(DateFormat.SHORT);
-        lblDataLocal.setText(formatar.format(data));
-        
+        lblDataLocal.setText(formatar.format(data));        
     }//GEN-LAST:event_formWindowActivated
 
     private void menuOpcaoSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpcaoSairActionPerformed
-        // Apresenta caixa de diãlogo com opções SIM e NÃO
+        // Apresenta caixa de diálogo com opções SIM e NÃO
         int sair = JOptionPane.showConfirmDialog(null, "tem certeza que deseja sair do Sistema?", "Atenção", JOptionPane.YES_NO_OPTION);
         
         if (sair == JOptionPane.YES_OPTION) {
@@ -216,34 +233,30 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_menuAjudaSobreActionPerformed
 
     private void menuCadUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadUsuarioActionPerformed
-        // TODO add your handling code here:
         TelaUsuario usuario = new TelaUsuario();
         usuario.setVisible(true);
         desktop.add(usuario);
     }//GEN-LAST:event_menuCadUsuarioActionPerformed
 
     private void menuCadClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadClienteActionPerformed
-        // TODO add your handling code here:
         TelaCliente cliente = new TelaCliente();
         cliente.setVisible(true);
         desktop.add(cliente);
     }//GEN-LAST:event_menuCadClienteActionPerformed
 
     private void menuCadOSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadOSActionPerformed
-        // TODO add your handling code here:
         TelaOS os = new TelaOS();
         os.setVisible(true);
         desktop.add(os);
     }//GEN-LAST:event_menuCadOSActionPerformed
 
     private void menuRelClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRelClientesActionPerformed
-        // Geração de relatório de clientes:
         int confirma = JOptionPane.showConfirmDialog(null, "Deseja imprimir o relatório de Clientes?", "Atenção!", JOptionPane.YES_NO_OPTION);
         
         if (confirma == JOptionPane.YES_OPTION) {
             try {
                 // usando classe JasperPrint para preparar a impressão do relatorio
-                JasperPrint print = JasperFillManager.fillReport("C:\\reports\\relatorioDeClientes.jasper", null, conexao);
+                JasperPrint print = JasperFillManager.fillReport(getClass().getResourceAsStream("/reports/relatorioDeClientes.jasper"), null, conexao);
                 
                 // exibe relatorio atraves da classe JasperViewer
                 JasperViewer.viewReport(print, false);
@@ -255,12 +268,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_menuRelClientesActionPerformed
 
     private void menuRelServicosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRelServicosActionPerformed
-        // TODO add your handling code here:
         int confirma = JOptionPane.showConfirmDialog(null, "Deseja emitir o Relatório de Serviços?", "Atenção!", JOptionPane.YES_NO_OPTION);
         
         if (confirma == JOptionPane.YES_OPTION) {
             try {
-                JasperPrint print = JasperFillManager.fillReport("C:\\reports\\relatorioDeOS.jasper", null, conexao);
+                JasperPrint print = JasperFillManager.fillReport(getClass().getResourceAsStream("/reports/relatorioDeOS.jasper"), null, conexao);
                 
                 JasperViewer.viewReport(print, false);
             } catch (Exception e) {
